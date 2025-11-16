@@ -23,30 +23,6 @@ A markdown parser written in JavaScript with **eight** custom functions built in
 
 We need to accept the XSS security setting which DOMPurify offers and provide, while directly after tell it to allow our `extl` syntax for external links to pass through. Obviously, this might change - so stay tuned :)
 
-## The JS code for your HTML document
-
-**The following JavaScript code is required in your HTML document in order for the parser to function:**
-
-`<script>
-(async function () {
-const containers = document.querySelectorAll("[data-md-src]");
-for (const el of containers) {
-const src = el.getAttribute("data-md-src");
-if (!src) continue;
-try {
-const resp = await fetch(src);
-if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-const rawMd = await resp.text();
-const html = window.parseMarkdown(rawMd);
-el.innerHTML = html;
-} catch (err) {
-console.error(`${src} was not rendered.`, err);
-el.innerHTML = `<div class="rendmd">${src} is not displayed.</div>`;
-}}})();
-</script>`
-
-Feel free to edit and change the messages displayed in the console and on the HTML page to your liking and/ or, to suit your needs.
-
 ## Why another `.md` parser?
 
 Because I got tired of large parsers which required "extending" and what not to get what I wanted - so I made my own. **Is this perfect? Obviously not.** But it does what I need it to do, and those wanting to change / extend etc, can. Just do it, I don't care. Feel free to fork it if you're craving to make changes.
@@ -57,41 +33,7 @@ The HTML example document below uses the latest stable link from `jsdelivr` (`ht
 
 ## HTML dummy template
 
-Example on how to use this parser.
-**HTML dummy template:**
-
-`<!DOCTYPE html>
-<html>
-<head>
-<title>Markdown Parsed</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,minimum-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
-<link href="style.css" rel="stylesheet" />
-</head>
-<body>
-<div data-md-src="name-of-document.md"></div>
-<div data-md-src="another-name-of-document.md"></div>
-<script src="nanoparser.js"></script>
-<script>
-(async function () {
-const containers = document.querySelectorAll("[data-md-src]");
-for (const el of containers) {
-const src = el.getAttribute("data-md-src");
-if (!src) continue;
-try {
-const resp = await fetch(src);
-if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-const rawMd = await resp.text();
-const html = window.parseMarkdown(rawMd);
-el.innerHTML = html;
-} catch (err) {
-console.error(`${src} was not rendered.`, err);
-el.innerHTML = `<div class="rendmd">${src} is not displayed.</div>`;
-}}})();
-</script>
-</body>
-</html>`
+See the `example.html` on how to use the parser.
 
 ## A version without DOMPurify? Yes.
 
